@@ -8,7 +8,36 @@ Explanation:
  */
 
 public enum Currency {
-    SUD,
-    QTR,
-    GTC;
+    GTC("GTC"),
+    SUD("SUD"),
+    QTR("QTR");
+
+    private final String currency;
+
+    Currency(String currency) {
+        this.currency = currency;
+    }
+
+    public static Currency matcher(String currency) {
+        if (currency.equals("GTC")) return GTC;
+        if (currency.equals("SUD")) return SUD;
+        if (currency.equals("QTR")) return QTR;
+        return null;
+    }
+   /* public static String string(Currency currency) {
+        switch (currency) {
+            case SUD:{
+                return "USD";
+            }
+            case QTR:{
+                return "QTR";
+            }
+            case GTC:{
+                return "GTC";
+            }
+        }
+        return "";
+    }
+    */
+
 }

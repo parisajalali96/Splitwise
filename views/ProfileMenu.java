@@ -7,19 +7,21 @@ Explanation:
  */
 
 
+import controllers.ProfileMenuController;
 import models.enums.ProfileMenuCommands;
 
 import java.util.regex.Matcher;
 
 public class ProfileMenu implements AppMenu{
+    ProfileMenuController controller = new ProfileMenuController();
     @Override
     public void check(String input) {
         Matcher matcher = null;
 
         if((matcher = ProfileMenuCommands.ShowInfo.getMatcher(input)) != null) {
-            //TODO
+            controller.showUserInfo();
         } else if((matcher = ProfileMenuCommands.ChangeCurrency.getMatcher(input)) != null) {
-            //TODO
+
         } else if((matcher = ProfileMenuCommands.ChangeUsername.getMatcher(input)) != null) {
             //TODO
         } else if((matcher = ProfileMenuCommands.ChangePassword.getMatcher(input)) != null) {

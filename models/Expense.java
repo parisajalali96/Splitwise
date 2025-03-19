@@ -9,8 +9,29 @@ Explanation:
 public class Expense{
     int expense;
     int groupId;
-    String inDebt;
-    String outDebt;
+    User inDebt;
+    User outDebt;
+
+    public Expense(int expense, int groupId, User inDebt, User outDebt){
+        this.expense = expense;
+        this.groupId = groupId;
+        this.inDebt = inDebt;
+        this.outDebt = outDebt;
+    }
+
+    public int getExpense(){
+        return expense;
+    }
+    public int getGroupId(){
+        return groupId;
+    }
+    public User getInDebt(){
+        return inDebt;
+    }
+    public User getOutDebt(){
+        return outDebt;
+    }
+
 
 
 }

@@ -7,27 +7,26 @@ Explanation:
  */
 
 
+import controllers.DashboardController;
 import models.enums.DashboardCommands;
 import models.enums.LoginMenuCommands;
 
 import java.util.regex.Matcher;
 
 public class Dashboard implements AppMenu {
+    DashboardController controller = new DashboardController();
     @Override
     public void check(String input) {
         Matcher matcher = null;
         if ((matcher = DashboardCommands.CreateGroup.getMatcher(input)) != null) {
-            //TODO
-
+            controller.createGroup(matcher.group("name"), matcher.group("type"));
         } else if ((matcher = DashboardCommands.ShowMyGroups.getMatcher(input)) != null) {
-            //TODO
-
+            controller.showMyGroups();
         } else if ((matcher = DashboardCommands.AddUserToGroup.getMatcher(input)) != null) {
-            //TODO
-
+            controller.addUserToGroup(matcher.group("username"),matcher.group("email"), matcher.group("id"));
         } else if ((matcher = DashboardCommands.AddExpense.getMatcher(input)) != null) {
-            //TODO
-
+            controller.addExpence(matcher.group("groupId"), matcher.group("equality"),
+                    matcher.group("totalExpense"), matcher.group("numOfUsers"));
         } else if ((matcher = DashboardCommands.ShowBalance.getMatcher(input)) != null) {
             //TODO
 
@@ -35,7 +34,7 @@ public class Dashboard implements AppMenu {
             //TODO
 
         } else if ((matcher = DashboardCommands.GoToProfileMenu.getMatcher(input)) != null) {
-            //TODO
+            controller.goToProfileMenu();
 
         } else if ((matcher = DashboardCommands.Logout.getMatcher(input)) != null) {
             //TODO

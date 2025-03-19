@@ -6,8 +6,35 @@ Explanation:
 - put those information here and use them in your code.
  */
 
+import java.util.ArrayList;
+
 public class Group{
     String name;
     String type;
-    static int id = 1;
+    ArrayList<User> members = new ArrayList<>();
+    User creator;
+    static int id = 0;
+    public Group(String name, String type, User creator){
+        this.name = name;
+        this.type = type;
+        this.creator = creator;
+        members.add(creator);
+        id++;
+    }
+
+    public String getName(){
+        return name;
+    }
+    public int getId(){
+        return id;
+    }
+    public String getType(){
+        return type;
+    }
+    public User getCreator(){
+        return creator;
+    }
+    public ArrayList<User> getMembers(){
+        return members;
+    }
 }
