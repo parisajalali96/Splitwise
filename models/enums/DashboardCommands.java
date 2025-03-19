@@ -10,15 +10,18 @@ Explanation:
 - this regexes need some functions, put those functions in here.
  */
 public enum DashboardCommands implements Command {
-    CreateGroup("create-group\\s+-n\\s+(?<name>[a-zA-Z0-9!@#$%^&*]{4,30})\\s+" +
-            "-t(?<type>(Home|Trip|Zan-O-Bache|Other))"),
+    CreateGroup("create-group\\s+-n\\s+(?<name>[\\w]+)\\s+" +
+            "-t(?<type>[\\w]+)"),
     ShowMyGroups("show my groups"),
-    AddUserToGroup("add-user\\s+-u\\s+(?<username>[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z])" +
-            "-e\\s+(?<email>[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z]@[a-zA-Z0-9.-]+\\.(com|net|edu|org))" +
+    AddUserToGroup("add-user\\s+-u\\s+(?<username>[\\w]+)" +
+            "-e\\s+(?<email>[\\w]+)" +
             "-g\\s+(?<id>\\d+)"),
-    AddExpense(""), //TODO
-    ShowBalance("show balance\\s+-u\\+s(?<username>[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z])"),
-    SettleUp("settle-up\\s+-u\\s+(?<username>[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z])" +
+    AddExpense("add-expense\\s+-g(?<groupId>\\d+)\\s+" +
+            "-s(?<equality)(equally|unequally))\\s+" +
+            "-t(?<totalExpense)\\d+)\\s+" +
+            "-n(?<numOfUsers)\\d+)\\s+"),
+    ShowBalance("show balance\\s+-u\\+s(?<username>[\\w]+)"),
+    SettleUp("settle-up\\s+-u\\s+(?<username>[\\w]+)" +
             "-m(?<money>\\d+)"),
     GoToProfileMenu("go to profile menu"),
     Logout("logout");

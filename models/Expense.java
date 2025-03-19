@@ -6,7 +6,7 @@ Explanation:
 - put those information here and use them in your code.
  */
 
-public class Expense extends App{
+public class Expense{
     int expense;
     int groupId;
     String inDebt;

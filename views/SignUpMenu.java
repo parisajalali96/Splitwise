@@ -18,11 +18,10 @@ public class SignUpMenu implements AppMenu{
     public void check(String input) {
         Matcher matcher = null;
         if((matcher = SignUpMenuCommands.Register.getMatcher(input)) != null) {
-            //TODO
-
+            controller.registerUser(matcher.group("username"),matcher.group("password"),
+                    matcher.group("email"), matcher.group("name"));
         } else if((matcher = SignUpMenuCommands.GoToLogIn.getMatcher(input)) != null) {
-            //TODO
-
+            controller.goToLogin();
         }
 
     }

@@ -6,7 +6,7 @@ Explanation:
 - put those information here and use them in your code.
  */
 
-public class Group extends App{
+public class Group{
     String name;
     String type;
     static int id = 1;

@@ -11,10 +11,11 @@ import java.util.regex.Pattern;
 
 public enum ProfileMenuCommands implements Command {
     ShowInfo("show user info"),
-    ChangeCurrency("change-currency\\s+-n\\s+(?<currency>(GTC|SUD|QTR))"),
-    ChangeUsername("change-username\\s+-n\\s+(?<username>[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z])"),
-    ChangePassword("change-password\\s+-o(?<oldPassword)(?<password>(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])\\S{6,12})\\s+" +
-            "-n\\s+(?<newPassword>(?<password>(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])\\S{6,12})\\s+"),
+    ChangeCurrency("change-currency\\s+-n\\s+(?<currency>[\\w]+)\\s+"),
+    ChangeUsername("change-username\\s+-n\\s+(?<username>[\\w]+)\\s+"),
+    ChangePassword("change-password\\s+" +
+            "-o(?<oldPassword)(?<password>[\\w]+)\\s+" +
+            "-n\\s+(?<newPassword>(?<password>[\\w]+)\\s+"),
     Back("back");
 
     private final String pattern;

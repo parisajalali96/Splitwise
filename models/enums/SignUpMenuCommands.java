@@ -10,9 +10,14 @@ Explanation:
 - this regexes need some functions, put those functions in here.
  */
 public enum SignUpMenuCommands implements Command {
-    Register("register\\s+-u\\s+(?<username>[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z])\\s+" +
-            "-p\\s+(?<password>(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])\\S{6,12})\\s+" +
-            "-e\\s+(?<email>[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z]@[a-zA-Z0-9.-]+\\.(com|net|edu|org))"),
+    UsernameRegex("[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z]"),
+    PasswordRegex("(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])\\S{6,12}"),
+    EmailRegex("[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z]@[a-zA-Z0-9.-]+\\.(com|net|edu|org)"),
+    NameRegex("[A-Za-z][A-Za-z-]*"),
+    Register("register\\s+-u\\s+(?<username>\\S+)\\s+" +
+            "-p\\s+(?<password>\\S+)\\s+" +
+            "-e\\s+(?<email>\\S+)\\s+" +
+            "-n\\s+(?<name>\\S+)"),
     GoToLogIn("go to login menu");
 
     final String pattern;

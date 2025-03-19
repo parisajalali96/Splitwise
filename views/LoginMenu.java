@@ -7,26 +7,23 @@ Explanation:
  */
 
 
+import controllers.LoginMenuController;
 import models.enums.LoginMenuCommands;
 import models.enums.SignUpMenuCommands;
 
 import java.util.regex.Matcher;
 
 public class LoginMenu implements AppMenu{
+    LoginMenuController controller = new LoginMenuController();
     @Override
     public void check(String input) {
         Matcher matcher = null;
         if((matcher = LoginMenuCommands.Login.getMatcher(input)) != null) {
-            //TODO
-
+            controller.loginUser(matcher.group("username"), matcher.group("password"));
         } else if((matcher = LoginMenuCommands.ForgotPassword.getMatcher(input)) != null) {
-            //TODO
-
+            controller.forgotPassword(matcher.group("username"), matcher.group("email"));
         } else if((matcher = LoginMenuCommands.GoToSignUp.getMatcher(input)) != null) {
-            //TODO
-
+            controller.goToSignup();
         }
-
     }
-
 }
