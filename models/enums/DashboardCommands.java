@@ -22,9 +22,9 @@ public enum DashboardCommands implements Command {
             "-s\\s+(?<equality>\\S+)\\s+" +
             "-t\\s+(?<totalExpense>\\d+)\\s+" +
             "-n\\s+(?<numOfUsers>\\d+)"),
-    ShowBalance("show balance\\s+-u\\+s(?<username>\\S+)"),
-    SettleUp("settle-up\\s+-u\\s+(?<username>\\S+)" +
-            "-m(?<money>\\d+)"),
+    ShowBalance("show balance\\s+-u\\s+(?<username>\\S+)"),
+    SettleUp("settle-up\\s+-u\\s+(?<username>\\S+)\\s+" +
+            "-m\\s+(?<money>\\d+)"),
     GoToProfileMenu("go to profile menu"),
     Logout("logout");
 

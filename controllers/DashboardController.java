@@ -88,7 +88,7 @@ public class DashboardController {
                     }
                     expenseMembers.add(findUser(username));
                 }
-                scanner.close();
+                //scanner.close();
                 for (User user : expenseMembers) {
                     Expense newExpence = new Expense (expence/num, groupId, user, App.getLoggedInUser());
                     App.getExpenses().add(newExpence);
@@ -99,6 +99,7 @@ public class DashboardController {
                 String username;
                 String expense;
                 int expenseNumber = 0;
+                int expenseT = 0;
                 for(int i = 0; i < num; i++) {
                     username = scanner.next();
                     expense = scanner.next();
@@ -108,8 +109,10 @@ public class DashboardController {
                         return new Result(false, "expense format is invalid!");
                     }
                     expenseNumber = Integer.parseInt(expense);
+                    expenseT += expenseNumber;
                     expenses.put(findUser(username), expenseNumber);
                 }
+                if(expenseT != expence) return new Result (false, "the sum of individual costs does not equal the total cost!");
                 for(User user : expenses.keySet()) {
                     Expense newExpense = new Expense (expenses.get(user), groupId, user, App.getLoggedInUser());
                     App.getExpenses().add(newExpense);
