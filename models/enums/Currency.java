@@ -28,20 +28,4 @@ public enum Currency {
     public int getCurrencyValue() {
         return currencyValue;
     }
-   /* public static String string(Currency currency) {
-        switch (currency) {
-            case SUD:{
-                return "USD";
-            }
-            case QTR:{
-                return "QTR";
-            }
-            case GTC:{
-                return "GTC";
-            }
-        }
-        return "";
-    }
-    */
-
 }

@@ -21,13 +21,13 @@ public class ProfileMenu implements AppMenu{
         if((matcher = ProfileMenuCommands.ShowInfo.getMatcher(input)) != null) {
             controller.showUserInfo();
         } else if((matcher = ProfileMenuCommands.ChangeCurrency.getMatcher(input)) != null) {
-
+            controller.changeCurrency(matcher.group("currency"));
         } else if((matcher = ProfileMenuCommands.ChangeUsername.getMatcher(input)) != null) {
-            //TODO
+            controller.changeUsername(matcher.group("username"));
         } else if((matcher = ProfileMenuCommands.ChangePassword.getMatcher(input)) != null) {
-            //TODO
+            controller.changePassword(matcher.group("oldPassword"), matcher.group("newPassword"));
         } else if((matcher = ProfileMenuCommands.Back.getMatcher(input)) != null) {
-            //TODO
+           controller.back();
         } else controller.invalidCommand();
     }
 
