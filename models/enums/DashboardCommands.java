@@ -18,8 +18,8 @@ public enum DashboardCommands implements Command {
     AddUserToGroup("add-user\\s+-u\\s+(?<username>\\S+)\\s+" +
             "-e\\s+(?<email>\\S+)\\s+" +
             "-g\\s+(?<id>\\d+)"),
-    AddExpense("add-expense\\s+-g(?<groupId>\\d+)\\s+" +
-            "-s\\s+(?<equality>(equally|unequally))\\s+" +
+    AddExpense("add-expense\\s+-g\\s+(?<groupId>\\d+)\\s+" +
+            "-s\\s+(?<equality>\\S+)\\s+" +
             "-t\\s+(?<totalExpense>\\d+)\\s+" +
             "-n\\s+(?<numOfUsers>\\d+)"),
     ShowBalance("show balance\\s+-u\\+s(?<username>\\S+)"),

@@ -11,9 +11,8 @@ import java.util.regex.Pattern;
 public class ExitMenu implements AppMenu{
     @Override
     public void check(String input) {
-
         if(input.equals("exit")) {
-
+            System.exit(0);
         }
     }
 }

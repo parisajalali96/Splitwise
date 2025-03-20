@@ -10,6 +10,7 @@ import models.App;
 import models.Result;
 import models.User;
 import models.enums.Currency;
+import models.enums.Menu;
 import models.enums.SignUpMenuCommands;
 
 import java.util.regex.Matcher;
@@ -57,5 +58,13 @@ public class ProfileMenuController {
         App.getLoggedInUser().setPassword(newPassword);
         return new Result(true, "your password changed successfully!");
     }
-    
+
+    public Result back () {
+        App.setCurrentMenu(Menu.Dashboard);
+        return new Result(true, "you are now in dashboard!");
+    }
+
+    public Result invalidCommand() {
+        return new Result(false, "invalid command!");
+    }
 }

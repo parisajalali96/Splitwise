@@ -28,7 +28,7 @@ public class ProfileMenu implements AppMenu{
             //TODO
         } else if((matcher = ProfileMenuCommands.Back.getMatcher(input)) != null) {
             //TODO
-        }
+        } else controller.invalidCommand();
     }
 
 }

@@ -3,7 +3,6 @@ package controllers;
 import models.*;
 import models.enums.DashboardCommands;
 import models.enums.GroupType;
-import models.enums.LoginMenuCommands;
 import models.enums.Menu;
 
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class DashboardController {
                 }
                 for (int i = 0; i < num; i++) {
                     username = scanner.nextLine();
-                    if(!findGroup(groupId).getMembers().contains(username)) {
+                    if(!findGroup(groupId).getMembers().contains(findUser(username))) { //prob not correct
                         return new Result(false, username + " not in group!");
                     }
                     expenseMembers.add(findUser(username));
@@ -120,9 +119,105 @@ public class DashboardController {
         }
     }
 
+    public int totalBalance (User user) {
+        int totalBalance = 0;
+        for (Expense expense : App.getExpenses()) {
+            if(expense.getInDebt().getUsername().equals(App.getLoggedInUser().getUsername()) &&
+                    expense.getOutDebt().getUsername().equals(user.getUsername())) {
+                totalBalance += expense.getExpense();
+            } else if (expense.getInDebt().getUsername().equals(user.getUsername()) &&
+                    expense.getOutDebt().getUsername().equals(App.getLoggedInUser().getUsername())) {
+                totalBalance -= expense.getExpense();
+            }
+        }
+        return totalBalance;
+    }
+    public Result showBalance(String username) {
+        User user = findUser(username);
+        int totalBalance = 0;
+        if(user == null) {
+            return new Result(false, "user not found!");
+        }
+        totalBalance = totalBalance(user);
+        if (totalBalance > 0) {
+            return new Result(true, "you owe " + user.getUsername() + " " +
+                    totalBalance/App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    App.getLoggedInUser().getCurrency().toString() + " in " + getMututalGroups(user));
+        } else if (totalBalance == 0) {
+            return new Result (true, "you are settled with " + user.getUsername());
+        } else {
+            totalBalance *= -1;
+            return new Result(true, user.getUsername() + " owes you " +
+                    totalBalance/App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    App.getLoggedInUser().getCurrency().toString() + " in " + getMututalGroups(user));
+        }
+    }
+    public Result settleUp(String username, String money) {
+        User user = findUser(username);
+        int moneyInput;
+        int debt = 0;
+        if(user == null) {
+            return new Result(false, "user not found!");
+        } else if (DashboardCommands.Expense.getMatcher(money) == null) {
+            return new Result(false, "input money format is invalid!");
+        }
+        moneyInput = Integer.parseInt(money);
+
+        for(Expense expense : App.getExpenses()) {
+            if(moneyInput == 0) break;
+            if(expense.getInDebt().getUsername().equals(App.getLoggedInUser().getUsername()) &&
+                    expense.getOutDebt().getUsername().equals(user.getUsername())) {
+                debt = expense.getExpense();
+                if(debt - moneyInput < 0) {
+                    debt -=moneyInput;
+                    expense.setOutDebt(App.getLoggedInUser());
+                    expense.setInDebt(user);
+                    expense.setExpense(-1*debt);
+                    moneyInput -= debt;
+                } else if (debt - moneyInput > 0) {
+                    debt -= moneyInput;
+                    expense.setExpense(debt);
+                    moneyInput = 0;
+                } else if (debt - moneyInput == 0) {
+                    debt = 0;
+                    expense.setExpense(debt);
+                    moneyInput = 0;
+                }
+            }
+        }
+
+        if (debt == 0) {
+            return new Result(true, "you are settled with " + user.getUsername() + " now!");
+        } else if (debt > 0) {
+            return new Result(true, "you owe " + user.getUsername() + " " +
+                    debt/App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    App.getLoggedInUser().getCurrency().toString() + " now!");
+        } else {
+            return new Result(true, user.getUsername() + " owes you " +
+                    -1*debt/App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    App.getLoggedInUser().getCurrency().toString() + " now!");
+        }
+
+    }
+    public String getMututalGroups(User user) {
+        String groups = "";
+        for (Group group : App.getGroups()) {
+            if(group.getMembers().contains(user) && group.getMembers().contains(App.getLoggedInUser())) {
+                groups += "\"" + group.getName() + "\"" + ", ";
+            }
+        }
+        groups = groups.substring(0, groups.length() - 2);
+        groups += "!";
+        return groups;
+    }
+
     public Result goToProfileMenu() {
         App.setCurrentMenu(Menu.ProfileMenu);
         return new Result(true, "you are now in profile menu!");
+    }
+
+    public Result invalidCommand() {
+        return new Result(false, "invalid command!");
     }
     public Group findGroup(int groupId) {
         for (Group group : App.getGroups()) {
@@ -139,6 +234,12 @@ public class DashboardController {
             }
         }
         return null;
+    }
+
+    public Result logout() {
+        App.setLoggedInUser(null);
+        App.setCurrentMenu(Menu.LoginMenu);
+        return new Result(true, "user logged out successfully.you are now in login menu!");
     }
 
 }

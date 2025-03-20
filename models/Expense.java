@@ -22,16 +22,25 @@ public class Expense{
     public int getExpense(){
         return expense;
     }
+
+    public void setExpense(int expense) {
+        this.expense = expense;
+    }
+
     public int getGroupId(){
         return groupId;
     }
     public User getInDebt(){
         return inDebt;
     }
+    public void setInDebt(User inDebt){
+        this.inDebt = inDebt;
+    }
     public User getOutDebt(){
         return outDebt;
     }
-
-
+    public void setOutDebt(User outDebt){
+        this.outDebt = outDebt;
+    }
 
 }

@@ -8,14 +8,14 @@ Explanation:
  */
 
 public enum Currency {
-    GTC("GTC"),
-    SUD("SUD"),
-    QTR("QTR");
+    GTC(1),
+    SUD(2),
+    QTR(5);
 
-    private final String currency;
+    private final int currencyValue;
 
-    Currency(String currency) {
-        this.currency = currency;
+    Currency(int currencyValue) {
+        this.currencyValue = currencyValue;
     }
 
     public static Currency matcher(String currency) {
@@ -23,6 +23,10 @@ public enum Currency {
         if (currency.equals("SUD")) return SUD;
         if (currency.equals("QTR")) return QTR;
         return null;
+    }
+
+    public int getCurrencyValue() {
+        return currencyValue;
     }
    /* public static String string(Currency currency) {
         switch (currency) {

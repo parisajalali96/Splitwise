@@ -9,8 +9,6 @@ Explanation:
 
 import controllers.DashboardController;
 import models.enums.DashboardCommands;
-import models.enums.LoginMenuCommands;
-
 import java.util.regex.Matcher;
 
 public class Dashboard implements AppMenu {
@@ -28,19 +26,16 @@ public class Dashboard implements AppMenu {
             controller.addExpence(matcher.group("groupId"), matcher.group("equality"),
                     matcher.group("totalExpense"), matcher.group("numOfUsers"));
         } else if ((matcher = DashboardCommands.ShowBalance.getMatcher(input)) != null) {
-            //TODO
+            controller.showBalance(matcher.group("username"));
 
         } else if ((matcher = DashboardCommands.SettleUp.getMatcher(input)) != null) {
-            //TODO
+            controller.settleUp(matcher.group("username"), matcher.group("money"));
 
         } else if ((matcher = DashboardCommands.GoToProfileMenu.getMatcher(input)) != null) {
             controller.goToProfileMenu();
 
         } else if ((matcher = DashboardCommands.Logout.getMatcher(input)) != null) {
-            //TODO
-
-        }
+            controller.logout();
+        } else controller.invalidCommand();
     }
-
-
 }

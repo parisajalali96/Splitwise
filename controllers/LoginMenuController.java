@@ -40,6 +40,10 @@ public class LoginMenuController {
         return new Result(true, "you are now in signup menu!");
     }
 
+    public Result invalidCommand() {
+        return new Result(false, "invalid command!");
+    }
+
     public User findUser (String username) {
         for(User user : App.getUsers()) {
             if(user.getUsername().equals(username)) {

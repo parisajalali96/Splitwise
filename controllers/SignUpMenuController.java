@@ -39,4 +39,9 @@ public class SignUpMenuController {
         App.setCurrentMenu(Menu.LoginMenu);
         return new Result(true, "you are now in login menu!");
     }
+
+    public Result invalidCommand() {
+        return new Result(false, "invalid command!");
+    }
+
 }
