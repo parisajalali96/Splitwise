@@ -12,7 +12,7 @@ Explanation:
 public enum GroupType implements Command{
     Home("Home"),
     Trip("Trip"),
-    ZanOBache("Zan-O-Bache"),
+    ZanOBache("Zan-o-Bache"),
     Other("Other");
 
     private String type;

@@ -36,6 +36,8 @@ public class Dashboard implements AppMenu {
 
         } else if ((matcher = DashboardCommands.Logout.getMatcher(input)) != null) {
             controller.logout();
-        } else controller.invalidCommand();
+        } else if (!input.isEmpty()) {
+            controller.invalidCommand();
+        }
     }
 }

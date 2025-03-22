@@ -20,7 +20,7 @@ public class SignUpMenuController {
         //boolean valid = true;
         if ((matcher = SignUpMenuCommands.UsernameRegex.getMatcher(username)) == null) {
             return new Result(false, "username format is invalid!");
-        } else if (App.getUsers().contains(username)) {
+        } else if (App.getUsers().contains(getUser(username))) {
             return new Result(false, "this username is already taken!");
         } else if ((matcher = SignUpMenuCommands.PasswordRegex.getMatcher(password)) == null) {
             return new Result(false, "password format is invalid!");
@@ -42,6 +42,15 @@ public class SignUpMenuController {
 
     public Result invalidCommand() {
         return new Result(false, "invalid command!");
+    }
+
+    public User getUser(String username) {
+        for (User user : App.getUsers()) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
     }
 
 }

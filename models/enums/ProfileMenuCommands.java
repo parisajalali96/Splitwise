@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 public enum ProfileMenuCommands implements Command {
     ShowInfo("show user info"),
-    ChangeCurrency("change-currency\\s+-n\\s+(?<currency>\\S+)\\s+"),
-    ChangeUsername("change-username\\s+-n\\s+(?<username>\\S+)\\s+"),
+    ChangeCurrency("change-currency\\s+-n\\s+(?<currency>\\S+)"),
+    ChangeUsername("change-username\\s+-n\\s+(?<username>\\S+)"),
     ChangePassword("change-password\\s+" +
             "-o\\s+(?<oldPassword>\\S+)\\s+" +
             "-n\\s+(?<newPassword>\\S+)"),

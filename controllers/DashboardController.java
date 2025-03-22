@@ -4,6 +4,7 @@ import models.*;
 import models.enums.DashboardCommands;
 import models.enums.GroupType;
 import models.enums.Menu;
+import views.AppView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class DashboardController {
     }
 
     public Result addExpence (String id, String equality, String exp, String n ) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = AppView.getScanner();
         int groupId = Integer.parseInt(id);
         int expence = Integer.parseInt(exp);
         int num = Integer.parseInt(n);
@@ -90,7 +91,7 @@ public class DashboardController {
                 }
                 //scanner.close();
                 for (User user : expenseMembers) {
-                    Expense newExpence = new Expense (expence/num, groupId, user, App.getLoggedInUser());
+                    Expense newExpence = new Expense ((expence/num)/App.getLoggedInUser().getCurrency().getCurrencyValue(), groupId, user, App.getLoggedInUser());
                     App.getExpenses().add(newExpence);
                 }
                 return new Result(true, "expense added successfully!");
@@ -103,7 +104,7 @@ public class DashboardController {
                 for(int i = 0; i < num; i++) {
                     username = scanner.next();
                     expense = scanner.next();
-                    if(!findGroup(groupId).getMembers().contains(username)) {
+                    if(!findGroup(groupId).getMembers().contains(findUser(username))) {
                         return new Result(false, username + " not in group!");
                     } else if(DashboardCommands.Expense.getMatcher(expense) == null) {
                         return new Result(false, "expense format is invalid!");
@@ -114,7 +115,7 @@ public class DashboardController {
                 }
                 if(expenseT != expence) return new Result (false, "the sum of individual costs does not equal the total cost!");
                 for(User user : expenses.keySet()) {
-                    Expense newExpense = new Expense (expenses.get(user), groupId, user, App.getLoggedInUser());
+                    Expense newExpense = new Expense (expenses.get(user)/App.getLoggedInUser().getCurrency().getCurrencyValue(), groupId, user, App.getLoggedInUser());
                     App.getExpenses().add(newExpense);
                 }
                 return new Result(true, "expense added successfully!");
@@ -144,29 +145,32 @@ public class DashboardController {
         totalBalance = totalBalance(user);
         if (totalBalance > 0) {
             return new Result(true, "you owe " + user.getUsername() + " " +
-                    totalBalance/App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    totalBalance*App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
                     App.getLoggedInUser().getCurrency().toString() + " in " + getMututalGroups(user));
         } else if (totalBalance == 0) {
             return new Result (true, "you are settled with " + user.getUsername());
         } else {
             totalBalance *= -1;
             return new Result(true, user.getUsername() + " owes you " +
-                    totalBalance/App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    totalBalance*App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
                     App.getLoggedInUser().getCurrency().toString() + " in " + getMututalGroups(user));
         }
     }
     public Result settleUp(String username, String money) {
         User user = findUser(username);
         int moneyInput;
-        int debt = 0;
+        int debtTotal = 0;
         if(user == null) {
             return new Result(false, "user not found!");
         } else if (DashboardCommands.Expense.getMatcher(money) == null) {
             return new Result(false, "input money format is invalid!");
         }
-        moneyInput = Integer.parseInt(money);
+
+        moneyInput = Integer.parseInt(money)/App.getLoggedInUser().getCurrency().getCurrencyValue();
+        System.out.println("money input " + moneyInput);
 
         for(Expense expense : App.getExpenses()) {
+            int debt = 0;
             if(moneyInput == 0) break;
             if(expense.getInDebt().getUsername().equals(App.getLoggedInUser().getUsername()) &&
                     expense.getOutDebt().getUsername().equals(user.getUsername())) {
@@ -186,18 +190,24 @@ public class DashboardController {
                     expense.setExpense(debt);
                     moneyInput = 0;
                 }
+                debtTotal += debt;
+                System.out.println("total debt " + debtTotal);
+            } else if(expense.getInDebt().getUsername().equals(user.getUsername()) &&
+                    expense.getOutDebt().getUsername().equals(App.getLoggedInUser().getUsername())) {
+                debt -= expense.getExpense();
+                continue;
             }
         }
 
-        if (debt == 0) {
+        if (debtTotal == 0) {
             return new Result(true, "you are settled with " + user.getUsername() + " now!");
-        } else if (debt > 0) {
+        } else if (debtTotal > 0) {
             return new Result(true, "you owe " + user.getUsername() + " " +
-                    debt/App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    debtTotal*App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
                     App.getLoggedInUser().getCurrency().toString() + " now!");
         } else {
             return new Result(true, user.getUsername() + " owes you " +
-                    -1*debt/App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    -1*debtTotal*App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
                     App.getLoggedInUser().getCurrency().toString() + " now!");
         }
 
@@ -206,7 +216,7 @@ public class DashboardController {
         String groups = "";
         for (Group group : App.getGroups()) {
             if(group.getMembers().contains(user) && group.getMembers().contains(App.getLoggedInUser())) {
-                groups += "\"" + group.getName() + "\"" + ", ";
+                groups += group.getName() + ", ";
             }
         }
         groups = groups.substring(0, groups.length() - 2);

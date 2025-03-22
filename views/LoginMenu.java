@@ -24,6 +24,8 @@ public class LoginMenu implements AppMenu{
             controller.forgotPassword(matcher.group("username"), matcher.group("email"));
         } else if((matcher = LoginMenuCommands.GoToSignUp.getMatcher(input)) != null) {
             controller.goToSignup();
-        } else controller.invalidCommand();
+        } else if (!input.isEmpty()) {
+            controller.invalidCommand();
+        }
     }
 }

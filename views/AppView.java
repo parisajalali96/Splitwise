@@ -12,15 +12,20 @@ import models.enums.Menu;
 import java.util.Scanner;
 
 public class AppView {
+    private static Scanner scanner = new Scanner(System.in);
     public void run() {
-        Scanner scanner = new Scanner(System.in);
         String input;
         while (true) {
            input = scanner.nextLine();
+           if (input.equals("exit")) break;
            App.getCurrentMenu().check(input);
-           if(App.getCurrentMenu() == Menu.ExitMenu) break;
+           //if(App.getCurrentMenu() == Menu.ExitMenu) break;
 
         }
+    }
+
+    public static Scanner getScanner() {
+        return scanner;
     }
 
 }

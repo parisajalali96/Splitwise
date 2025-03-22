@@ -11,8 +11,8 @@ Explanation:
  */
 public enum DashboardCommands implements Command {
     Expense("\\d+"),
-    GroupName("[a-zA-Z0-9!@#$%^&*]{4,30}"),
-    CreateGroup("create-group\\s+-n\\s+(?<name>\\S+)\\s+" +
+    GroupName("[a-zA-Z0-9!@#$%^&* ]{4,30}"),
+    CreateGroup("create-group\\s+-n\\s+(?<name>.+)\\s+" +
             "-t\\s+(?<type>\\S+)"),
     ShowMyGroups("show my groups"),
     AddUserToGroup("add-user\\s+-u\\s+(?<username>\\S+)\\s+" +

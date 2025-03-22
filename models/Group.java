@@ -14,19 +14,21 @@ public class Group{
     ArrayList<User> members = new ArrayList<>();
     User creator;
     static int id = 0;
+    int groupId;
     public Group(String name, String type, User creator){
         this.name = name;
         this.type = type;
         this.creator = creator;
         members.add(creator);
         id++;
+        groupId = id;
     }
 
     public String getName(){
         return name;
     }
     public int getId(){
-        return id;
+        return groupId;
     }
     public String getType(){
         return type;

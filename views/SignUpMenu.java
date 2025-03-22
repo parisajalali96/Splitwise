@@ -22,7 +22,9 @@ public class SignUpMenu implements AppMenu{
                     matcher.group("email"), matcher.group("name"));
         } else if((matcher = SignUpMenuCommands.GoToLogIn.getMatcher(input)) != null) {
             controller.goToLogin();
-        } else controller.invalidCommand();
+        } else if (!input.isEmpty()) {
+            controller.invalidCommand();
+        }
 
     }
 

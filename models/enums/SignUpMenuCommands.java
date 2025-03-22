@@ -10,9 +10,9 @@ Explanation:
 - this regexes need some functions, put those functions in here.
  */
 public enum SignUpMenuCommands implements Command {
-    UsernameRegex("[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z]"),
+    UsernameRegex("[a-zA-Z][a-zA-Z0-9._-]{3,9}"),
     PasswordRegex("(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])\\S{6,12}"),
-    EmailRegex("[a-zA-Z][a-zA-Z0-9._-]{2,8}[a-zA-Z]@[a-zA-Z0-9.-]+\\.(com|net|edu|org)"),
+    EmailRegex("[a-zA-Z][a-zA-Z0-9._-]{3,9}@[a-zA-Z0-9.-]+\\.(com|net|edu|org)"),
     NameRegex("[A-Za-z][A-Za-z-]*"),
     Register("register\\s+-u\\s+(?<username>\\S+)\\s+" +
             "-p\\s+(?<password>\\S+)\\s+" +
