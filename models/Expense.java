@@ -27,6 +27,10 @@ public class Expense{
         this.expense = expense;
     }
 
+    public void increaseExpense(int amount){
+        this.expense += amount;
+    }
+
     public int getGroupId(){
         return groupId;
     }

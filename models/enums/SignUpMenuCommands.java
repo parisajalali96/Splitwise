@@ -12,13 +12,13 @@ Explanation:
 public enum SignUpMenuCommands implements Command {
     UsernameRegex("[a-zA-Z][a-zA-Z0-9._-]{3,9}"),
     PasswordRegex("(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])\\S{6,12}"),
-    EmailRegex("[a-zA-Z][a-zA-Z0-9._-]{3,9}@[a-zA-Z0-9.-]+\\.(com|net|edu|org)"),
-    NameRegex("[A-Za-z][A-Za-z-]*"),
-    Register("register\\s+-u\\s+(?<username>\\S+)\\s+" +
+    EmailRegex("[a-zA-Z][a-zA-Z0-9._-]{3,9}@[a-zA-Z]+([.-][a-zA-Z]+)?\\.(com|net|edu|org)"),
+    NameRegex("[A-Za-z][A-Za-z-]*[A-Za-z]"),
+    Register("\\s*register\\s+-u\\s+(?<username>.*)\\s+" +
             "-p\\s+(?<password>\\S+)\\s+" +
             "-e\\s+(?<email>\\S+)\\s+" +
-            "-n\\s+(?<name>\\S+)"),
-    GoToLogIn("go to login menu");
+            "-n\\s+(?<name>\\S+)\\s*"),
+    GoToLogIn("\\s*go to login menu\\s*");
 
     final String pattern;
     SignUpMenuCommands(String pattern){

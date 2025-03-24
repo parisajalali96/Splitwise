@@ -10,23 +10,24 @@ Explanation:
 - this regexes need some functions, put those functions in here.
  */
 public enum DashboardCommands implements Command {
-    Expense("\\d+"),
+    Expense("\\s*(?<expense>\\d+)\\s*"),
+    UnequalExpense("(?<username>[a-zA-Z][a-zA-Z0-9._-]{3,9})\\s+(?<expense>\\d+\\s*\\S*)"),
     GroupName("[a-zA-Z0-9!@#$%^&* ]{4,30}"),
-    CreateGroup("create-group\\s+-n\\s+(?<name>.+)\\s+" +
-            "-t\\s+(?<type>\\S+)"),
-    ShowMyGroups("show my groups"),
-    AddUserToGroup("add-user\\s+-u\\s+(?<username>\\S+)\\s+" +
-            "-e\\s+(?<email>\\S+)\\s+" +
-            "-g\\s+(?<id>\\d+)"),
-    AddExpense("add-expense\\s+-g\\s+(?<groupId>\\d+)\\s+" +
-            "-s\\s+(?<equality>\\S+)\\s+" +
-            "-t\\s+(?<totalExpense>\\d+)\\s+" +
-            "-n\\s+(?<numOfUsers>\\d+)"),
-    ShowBalance("show balance\\s+-u\\s+(?<username>\\S+)"),
-    SettleUp("settle-up\\s+-u\\s+(?<username>\\S+)\\s+" +
-            "-m\\s+(?<money>\\d+)"),
-    GoToProfileMenu("go to profile menu"),
-    Logout("logout");
+    CreateGroup("\\s*create-group\\s+-n\\s+(?<name>.+)\\s+" +
+            "-t\\s+(?<type>.*)\\s*"),
+    ShowMyGroups("\\s*show my groups\\s*"),
+    AddUserToGroup("\\s*add-user\\s+-u\\s+(?<username>.*)\\s+" +
+            "-e\\s+(?<email>.*)\\s+" +
+            "-g\\s+(?<id>.*)\\s*"),
+    AddExpense("\\s*add-expense\\s+-g\\s+(?<groupId>-?\\d+)\\s+" +
+            "-s\\s+(?<equality>.*)\\s+" +
+            "-t\\s+(?<totalExpense>.*)\\s+" +
+            "-n\\s+(?<numOfUsers>.*)\\s*"),
+    ShowBalance("\\s*show balance\\s+-u\\s+(?<username>\\S+)\\s*"),
+    SettleUp("settle-up\\s+-u\\s+(?<username>.*)\\s+" +
+            "-m\\s+(?<money>.*)\\s*"),
+    GoToProfileMenu("\\s*go to profile menu\\s*"),
+    Logout("\\s*logout\\s*");
 
     private String pattern;
     DashboardCommands(String pattern) {
