@@ -11,14 +11,14 @@ Explanation:
  */
 public enum SignUpMenuCommands implements Command {
     UsernameRegex("[a-zA-Z][a-zA-Z0-9._-]{3,9}"),
-    PasswordRegex("(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])\\S{6,12}"),
-    EmailRegex("[a-zA-Z][a-zA-Z0-9._-]{3,9}@[a-zA-Z]+([.-][a-zA-Z]+)?\\.(com|net|edu|org)"),
-    NameRegex("[A-Za-z][A-Za-z-]*[A-Za-z]"),
-    Register("\\s*register\\s+-u\\s+(?<username>.*)\\s+" +
-            "-p\\s+(?<password>\\S+)\\s+" +
-            "-e\\s+(?<email>\\S+)\\s+" +
-            "-n\\s+(?<name>\\S+)\\s*"),
-    GoToLogIn("\\s*go to login menu\\s*");
+    PasswordRegex("(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[a-zA-Z\\d!@#$%^&*]{6,12}"),
+    EmailRegex("^[A-Za-z][\\w.-]{3,9}@[a-z](?![a-z]*[-.][a-z]*[-.][a-z]*[a-z]\\.)[a-z.\\-]{1,5}[a-z]\\.(org|com|net|edu)$"),
+    NameRegex("^[A-Za-z]([A-Za-z-]*[A-Za-z])*$"),
+    Register("^\\s*register\\s+-u\\s+(?<username>\\S+(\\s*\\S+)*)\\s+" +
+            "-p\\s+(?<password>\\S+(\\s*\\S+)*)\\s+" +
+            "-e\\s+(?<email>\\S+(\\s*\\S+)*)\\s+" +
+            "-n\\s+(?<name>\\S+(\\s*\\S+)*)\\s*$"),
+    GoToLogIn("^\\s*go to login menu\\s*$");
 
     final String pattern;
     SignUpMenuCommands(String pattern){

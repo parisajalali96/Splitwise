@@ -9,12 +9,15 @@ Explanation:
 
 import models.enums.Currency;
 
+import java.util.ArrayList;
+
 public class User{
     String username;
     String password;
     String email;
     String name;
     Currency currency;
+    ArrayList<Group> groups = new ArrayList<>();
     public User(String username, String password, String email, String name) {
         this.username = username;
         this.password = password;
@@ -54,6 +57,12 @@ public class User{
     }
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+    public void addGroup(Group group){
+        groups.add(group);
+    }
+    public ArrayList<Group> getGroups() {
+        return groups;
     }
 
 }

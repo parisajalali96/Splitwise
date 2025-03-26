@@ -14,6 +14,7 @@ public record Result(boolean success, String message) {
         printMessage(message);
     }
     public static void printMessage(String message) {
+        if(message.isEmpty()) return;
         System.out.println(message);
     }
 }

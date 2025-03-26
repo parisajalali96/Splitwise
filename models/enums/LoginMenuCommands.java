@@ -10,11 +10,11 @@ Explanation:
 - this regexes need some functions, put those functions in here.
  */
 public enum LoginMenuCommands implements Command {
-    Login("\\s*login\\s+-u\\s+(?<username>.*)\\s+" +
-            "-p\\s+(?<password>.*)\\s*"),
-    ForgotPassword("\\s*forget-password\\s+-u\\s+(?<username>.*)\\s+" +
-            "-e\\s+(?<email>.*)\\s*"),
-    GoToSignUp("\\s*go to signup menu\\s*");
+    Login("^\\s*login\\s+-u\\s+(?<username>\\S+(\\s*\\S+)*)\\s+" +
+            "-p\\s+(?<password>\\S+(\\s*\\S+)*)\\s*$"),
+    ForgotPassword("^\\s*forget-password\\s+-u\\s+(?<username>\\S+(\\s*\\S+)*)\\s+" +
+            "-e\\s+(?<email>\\S+(\\s*\\S+)*)\\s*$"),
+    GoToSignUp("^\\s*go to signup menu\\s*$");
 
     private final String pattern;
     LoginMenuCommands(String pattern) {

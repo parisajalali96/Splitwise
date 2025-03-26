@@ -21,6 +21,8 @@ public class DashboardController {
     Matcher matcher = null;
 
     public Result createGroup(String name, String type) {
+        name = name.trim();
+        type = type.trim();
         if ((matcher = DashboardCommands.GroupName.getMatcher(name)) == null) {
             return new Result(false, "group name format is invalid!");
         } else if ((matcher = GroupType.Home.getMatcher(type)) == null && (matcher = GroupType.Trip.getMatcher(type)) == null &&
@@ -29,28 +31,34 @@ public class DashboardController {
         }
         Group group = new Group(name, type, App.getLoggedInUser());
         App.getGroups().add(group);
+        App.getLoggedInUser().addGroup(group);
         return new Result(true, "group created successfully!");
     }
 
     public void showMyGroups() {
-        for (Group group : App.getGroups()) {
-            if(group.getMembers().contains(App.getLoggedInUser())) {
+        boolean groupFound = false;
+        for (Group group : App.getLoggedInUser().getGroups()) {
                 System.out.println("group name : " + group.getName());
                 System.out.println("id : " + group.getId());
                 System.out.println("type : " + group.getType());
                 System.out.println("creator : " + group.getCreator().getName());
-                System.out.println("members : ");
+                System.out.print("members : \n");
                 for (User user : group.getMembers()) {
                     System.out.println(user.getName());
                 }
                 System.out.println("--------------------");
-            }
+                groupFound = true;
+        }
+        if(!groupFound) {
+            System.out.println("");
         }
     }
 
     public Result addUserToGroup(String username, String email, String id) {
         Matcher matcher = null;
         int groupId = Integer.parseInt(id);
+        username = username.trim();
+        email = email.trim();
         if(findUser(username) == null) {
             return new Result(false, "user not found!");
         } else if (findGroup(groupId) == null) {
@@ -63,6 +71,7 @@ public class DashboardController {
             return new Result(false, "only the group creator can add users!");
         }
         findGroup(groupId).getMembers().add(findUser(username));
+        findUser(username).getGroups().add(findGroup(groupId));
         return new Result(true, "user added to the group successfully!");
     }
 
@@ -71,17 +80,20 @@ public class DashboardController {
         int groupId = Integer.parseInt(id);
         int expence;
         int num = Integer.parseInt(n);
-        boolean equal = false;
-        if(equality.equals("equally")) equal = true;
+        boolean equal = equality.equals("equally");
         if(findGroup(groupId) == null) {
-            return new Result(false, "group not found!");
+            System.out.println("group not found!");
+            for(int i = 0; i < num; i++) {
+                scanner.nextLine();
+            }
+            return new Result(false, "");
         } else {
             if(equal) {
                 String username;
                 ArrayList<User> expenseMembers = new ArrayList<>();
                 boolean found = true;
                 for (int i = 0; i < num; i++) {
-                    username = scanner.nextLine();
+                    username = scanner.nextLine().trim();
                     if(!findGroup(groupId).getMembers().contains(findUser(username))) {
                         System.out.println(username + " not in group!");
                         found = false;
@@ -116,26 +128,31 @@ public class DashboardController {
                 int expenseTotal;
                 boolean found = true;
                 boolean expenseValid = true;
+                boolean expenseError = false;
                 for(int i = 0; i < num; i++) {
                     String input = scanner.nextLine();
                     username = DashboardCommands.UnequalExpense.getMatcher(input).group("username");
                     expense = DashboardCommands.UnequalExpense.getMatcher(input).group("expense");
-                    if (!findGroup(groupId).getMembers().contains(findUser(username))) {
-                        System.out.println(username + " not in group!");
+                    if (!findGroup(groupId).getMembers().contains(findUser(username)) && !expenseError) {
+                        System.out.println(username.trim() + " not in group!");
                         found = false;
+
                     } else if (DashboardCommands.Expense.getMatcher(expense) == null) {
-                        System.out.println("expense format is invalid!");
                         expenseValid = false;
-                        continue;
                     }
+                    if(!expenseValid && found && !expenseError) {
+                        System.out.println("expense format is invalid!");
+                        expenseError = true;
+                    }
+                    if(!found || !expenseValid) continue;
                     expenseNumber = Integer.parseInt(DashboardCommands.Expense.getMatcher(expense).group("expense"));
                     expenseT += expenseNumber;
                     if (found && expenseValid && !username.equals(App.getLoggedInUser().getUsername())) {
                         expenses.put(findUser(username), expenseNumber);
                     }
                 }
-                if(!found) return new Result(false, "");
-                if(!expenseValid) return new Result(false, "");
+
+                if(!found || !expenseValid) return new Result(false, "");
                 if(DashboardCommands.Expense.getMatcher(exp) == null) {
                     return new Result(false, "expense format is invalid!");
                 }
@@ -172,11 +189,13 @@ public class DashboardController {
     }
 
     public Result showBalance(String username) {
+        username = username.trim();
         User user = findUser(username);
         int totalBalance = 0;
         if(user == null) {
             return new Result(false, "user not found!");
-        }
+        } else if (getMututalGroups(user).isEmpty()) return new Result (true, "you are settled with " + user.getUsername());
+
         totalBalance = totalBalance(user);
         if (totalBalance > 0) {
             return new Result(true, user.getUsername() + " owes you " +
@@ -193,6 +212,7 @@ public class DashboardController {
     }
 
     public Result settleUp(String username, String money) {
+        username = username.trim();
         User user = findUser(username);
         int moneyInput;
         int debtTotal = 0;
@@ -200,6 +220,8 @@ public class DashboardController {
             return new Result(false, "user not found!");
         } else if (DashboardCommands.Expense.getMatcher(money) == null) {
             return new Result(false, "input money format is invalid!");
+        } else if(App.getLoggedInUser().getUsername().equals(username) || getMututalGroups(user).isEmpty()) {
+            return new Result(true, "you are settled with " + user.getUsername() + " now!");
         }
 
         moneyInput = Integer.parseInt(DashboardCommands.Expense.getMatcher(money).group("expense"))/App.getLoggedInUser().getCurrency().getCurrencyValue();
@@ -207,6 +229,10 @@ public class DashboardController {
         Expense expense = findExpense(user);
         if(expense == null) {
             expense = new Expense(moneyInput, 1, user, App.getLoggedInUser());
+            App.getExpenses().add(expense);
+            return new Result(true, user.getUsername() + " owes you " +
+                    moneyInput*App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
+                    App.getLoggedInUser().getCurrency().toString() + " now!");
         }
         debtTotal = -1*totalBalance(user);
 
@@ -214,6 +240,7 @@ public class DashboardController {
             if(debtTotal - moneyInput > 0) {
                 debtTotal -= moneyInput;
                 expense.setExpense(debtTotal);
+
                 return new Result(true, "you owe " + user.getUsername() + " " +
                         debtTotal*App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
                         App.getLoggedInUser().getCurrency().toString() + " now!");
@@ -237,18 +264,21 @@ public class DashboardController {
                     -1*debtTotal*App.getLoggedInUser().getCurrency().getCurrencyValue() + " " +
                     App.getLoggedInUser().getCurrency().toString() + " now!");
         }
+
     }
 
     public String getMututalGroups(User user) {
-        String groups = "";
+        StringBuilder groups = new StringBuilder();
         for (Group group : App.getGroups()) {
             if(group.getMembers().contains(user) && group.getMembers().contains(App.getLoggedInUser())) {
-                groups += group.getName() + ", ";
+                groups.append(group.getName()).append(", ");
             }
         }
-        groups = groups.substring(0, groups.length() - 2);
-        groups += "!";
-        return groups;
+        if(!groups.toString().equals("")) {
+            groups = new StringBuilder(groups.substring(0, groups.length() - 2));
+            groups.append("!");
+        }
+        return groups.toString();
     }
 
     public Result goToProfileMenu() {
@@ -286,7 +316,7 @@ public class DashboardController {
         for (Expense expense : App.getExpenses()) {
             if((expense.getInDebt().getUsername().equals(user.getUsername())
                     && expense.getOutDebt().getUsername().equals(App.getLoggedInUser().getUsername()))
-            || (expense.getInDebt().getUsername().equals(App.getLoggedInUser().getUsername()) &&
+                    || (expense.getInDebt().getUsername().equals(App.getLoggedInUser().getUsername()) &&
                     expense.getOutDebt().getUsername().equals(user.getUsername()))) {
                 return expense;
             }

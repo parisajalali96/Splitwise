@@ -36,11 +36,12 @@ public class ProfileMenuController {
     }
 
     public Result changeUsername (String newUsername) {
+        Matcher matcher = null;
         if (App.getLoggedInUser().getUsername().equals(newUsername)) {
             return new Result(false, "please enter a new username!");
-        } else if (App.getUsers().contains(newUsername)) {
+        } else if (App.getUsers().contains(getUser(newUsername))) {
             return new Result(false, "this username is already taken!");
-        } else if (SignUpMenuCommands.UsernameRegex.getMatcher(newUsername) == null) {
+        } else if ((matcher = SignUpMenuCommands.UsernameRegex.getMatcher(newUsername)) == null) {
             return new Result(false, "new username format is invalid!");
         }
         App.getLoggedInUser().setUsername(newUsername);
@@ -48,17 +49,26 @@ public class ProfileMenuController {
     }
 
     public Result changePassword (String oldPassword, String newPassword) {
+        Matcher matcher = null;
         if(!App.getLoggedInUser().getPassword().equals(oldPassword)) {
             return new Result(false, "password incorrect!");
         } else if (App.getLoggedInUser().getPassword().equals(newPassword)) {
             return new Result(false, "please enter a new password!");
-        } else if (SignUpMenuCommands.PasswordRegex.getMatcher(newPassword) == null) {
+        } else if ((matcher = SignUpMenuCommands.PasswordRegex.getMatcher(newPassword)) == null) {
             return new Result(false, "new password format is invalid!");
         }
         App.getLoggedInUser().setPassword(newPassword);
         return new Result(true, "your password changed successfully!");
     }
 
+    public User getUser (String username) {
+        for (User user : App.getUsers()) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
     public Result back () {
         App.setCurrentMenu(Menu.Dashboard);
         return new Result(true, "you are now in dashboard!");
